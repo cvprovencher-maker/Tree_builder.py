@@ -6,9 +6,10 @@ class EmployeeNode:
         left (EmployeeNode): The left child node, representing the left subordinate.
         right (EmployeeNode): The right child node, representing the right subordinate.
     '''
-
-    # Delete this line and implement the class below
-    pass
+    def __init__(self, name):
+        self.name = name
+        self.left = None
+        self.right = None
 
 class TeamTree:
     '''
@@ -21,17 +22,68 @@ class TeamTree:
 
     '''
     
-    # Delete this line and implement the class below
-    pass
+  def __init__(self):
+        self.root = None
 
-# Test your code here
+    def insert(self, manager_name, employee_name, side, current_node=None):
+        if self.root is None:
+            print("⚠️  No team lead exists. Add a root first.")
+            return
+
+        if current_node is None:
+            current_node = self.root
+
+        if current_node.name == manager_name:
+            if side == "left":
+                if current_node.left is None:
+                    current_node.left = EmployeeNode(employee_name)
+                    print(f"✅ {employee_name} added to the LEFT of {manager_name}")
+                else:
+                    print(f"⚠️ LEFT of {manager_name} is already occupied.")
+            elif side == "right":
+                if current_node.right is None:
+                    current_node.right = EmployeeNode(employee_name)
+                    print(f"✅ {employee_name} added to the RIGHT of {manager_name}")
+                else:
+                    print(f"⚠️ RIGHT of {manager_name} is already occupied.")
+            else:
+                print("⚠️ Invalid side. Choose 'left' or 'right'.")
+            return
+
+        if current_node.left:
+            self.insert(manager_name, employee_name, side, current_node.left)
+        if current_node.right:
+            self.insert(manager_name, employee_name, side, current_node.right)
+
+    def print_tree(self, node=None, level=0):
+        if node is None:
+            if level == 0:
+                node = self.root
+            else:
+                return
+        print("    " * level + f"- {node.name}")
+        if node.left:
+            self.print_tree(node.left, level + 1)
+        if node.right:
+            self.print_tree(node.right, level + 1)
 
 
-
-
-
-
-
+if __name__ == "__main__":
+    company_directory = TeamTree()
+    company_directory.root = EmployeeNode("Jordan")
+    company_directory.insert("Jordan", "Riley", "left")
+    company_directory.insert("Jordan", "Taylor", "right")
+    company_directory.insert("Riley", "Morgan", "left")
+    company_directory.insert("Riley", "Dana", "right")
+    company_directory.print_tree()
+    """
+    Output:
+    - Jordan
+        - Riley
+            - Morgan
+            - Dana
+        - Taylor
+    """
 
 
 # CLI functionality
